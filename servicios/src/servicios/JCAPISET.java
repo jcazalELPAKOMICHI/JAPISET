@@ -3,22 +3,21 @@ package servicios;
 import Clases.CalcularDV;
 import Clases.LlamadaServicio;
 import Model.SET;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-import java.util.logging.Level;
 
-public class Servicios extends SET {
+
+public class JCAPISET extends SET {
 
     CalcularDV dv = new CalcularDV();
     LlamadaServicio servicio = new LlamadaServicio();
     SET set;
 
 
-    public Servicios(){        
+    public JCAPISET(){        
     }
     
 
     public int DigitoVerificador(String ruc) {
-        LOGGER.log(Level.INFO, "El RUC " + ruc + " posee el Digito Verificador Es " + dv.Pa_Calcular_Dv_11_A(ruc, 11));
+    
         return dv.Pa_Calcular_Dv_11_A(ruc, 11);
     }
 
@@ -28,6 +27,7 @@ public class Servicios extends SET {
         this.setEstado(set.getEstado());
         this.setNombreCompleto(set.getNombreCompleto());
         this.setRuc(ruc);
-    }
+        
+    } 
 
 }

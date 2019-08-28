@@ -1,10 +1,9 @@
 package Clases;
 
 import Model.SET;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import java.io.IOException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import retrofit2.Call;
@@ -24,42 +23,18 @@ public class LlamadaServicio {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://servicios.set.gov.py/eset-publico/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
 
         Service service = retrofit.create(Service.class);
-        Call<SET> call = service.getDatos(ruc);
 
-        call.enqueue(new Callback<SET>() {
-            @Override
-            public void onResponse(Call<SET> call, Response<SET> rspns) {
-                switch (rspns.code()) {
-                    case 200:
-                        set = rspns.body();
-                        LOGGER.log(Level.INFO, set.toString());
-                         {
-                            try {
-                                finalize();
-                            } catch (Throwable ex) {
-                                Logger.getLogger(LlamadaServicio.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                        break;
-                    case 401:
-
-                        break;
-                    default:
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SET> call, Throwable thrwbl) {
-                LOGGER.log(Level.WARNING, thrwbl.toString());
-            }
-        });
-
+        try {
+            Call<SET> call = service.getDatos(ruc);
+            set = call.execute().body();
+            System.out.println(set.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(LlamadaServicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return set;
     }
 
